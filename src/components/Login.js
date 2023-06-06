@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import '../styles/Login.css';
 
 const Login = () => {
@@ -9,7 +11,7 @@ const Login = () => {
 
   const history = useHistory();
 
-  const handleSubmit = (event) => {
+  function handleSubmit(event) {
     event.preventDefault();
 
     // Example login logic: check if email and password match
@@ -25,12 +27,12 @@ const Login = () => {
       // Failed login
       setError('Invalid email or password');
     }
-  };
+  }
 
   return (
-    <div className="login">
-      <div className="container">
-        <h2>Login</h2>
+    <div className="join-container">
+      <div className="join-box">
+        <h2 className="join-heading">Login</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="email"

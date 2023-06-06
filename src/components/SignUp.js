@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/Login.css';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/SignUp.css';
 
 const SignUp = () => {
@@ -25,9 +28,9 @@ const SignUp = () => {
   };
 
   return (
-    <div className="signup">
-      <div className="container">
-        <h2>Sign Up</h2>
+    <div className="join-container">
+      <div className="join-box">
+        <h2 className='join-heading'>Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
