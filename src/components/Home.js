@@ -1,14 +1,23 @@
-import React from 'react';
-import {useHistory} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import '../styles/Home.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-//Get started goes to login
+
 const Home = () => {
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    if (isLoading) {
+      // Simulate loading for 2 seconds
+      const timeout = setTimeout(() => {
+        history.push('/todolist');
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoading, history]);
   const handleGetStarted = () => {
-    history.push('/login');
+    setIsLoading(true);
   };
-
 
   return (
     <Container className="text-center">
@@ -18,7 +27,13 @@ const Home = () => {
           <p className="lead">
             This is a simple todo application built with React. Stay organized and manage your tasks efficiently.
           </p>
-          <Button variant="primary" onClick={handleGetStarted}>Get Started</Button>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <Button variant="primary" onClick={handleGetStarted}>
+              Get Started
+            </Button>
+          )}
         </Col>
       </Row>
     </Container>
