@@ -1,9 +1,58 @@
+const { gql } = require('apollo-server');
+const Todo = require('../models/todo.js');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const typeDefs = gql`
+  type User {
+    id: ID!
+    username: String!
+    password: String!
+  }
+
+  type Todo {
+    id: ID!
+    title: String!
+    description: String!
+    completed: Boolean!
+  }
+
+  type Query {
+    todos: [Todo!]!
+  }
+
+  type Mutation {
+    createTodo(title: String!, description: String!): Todo!
+    registerUser(username: String!, password: String!): User!
+    loginUser(username: String!, password: String!): User!
+  }
+`;
+
 const resolvers = {
+  Query: {
+    todos: async () => {
+      try {
+        const todos = await Todo.find();
+        return todos;
+      } catch (error) {
+        throw new Error('Error retrieving todos');
+      }
+    },
+  },
   Mutation: {
+    createTodo: async (_, { title, description }) => {
+      try {
+        const todo = new Todo({
+          title,
+          description,
+        });
+        await todo.save();
+        return todo;
+      } catch (error) {
+        throw new Error('Error creating todo');
+      }
+    },
     registerUser: async (_, { username, password }) => {
       try {
         // Check if user already exists
@@ -27,7 +76,6 @@ const resolvers = {
         throw new Error('Error registering user');
       }
     },
-
     loginUser: async (_, { username, password }) => {
       try {
         // Find the user
