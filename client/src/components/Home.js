@@ -8,10 +8,10 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (isLoading) {
-      // Simulate loading for 100 milliseconds
+      // Simulate loading for 2 seconds
       const timeout = setTimeout(() => {
         history.push('/todolist');
-      }, 100);
+      }, 500);
       return () => clearTimeout(timeout);
     }
   }, [isLoading, history]);

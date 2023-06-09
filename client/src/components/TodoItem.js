@@ -1,28 +1,67 @@
-import React from 'react';
-import '../styles/TodoItem.css';
+import React, { useState } from 'react';
+import Select from 'react-select';
+import Datetime from 'react-datetime';
+import '../styles/AddTodoForm.css';
+import 'react-datetime/css/react-datetime.css';
 
-const TodoItem = ({ todo, onDeleteTodo, onDeleteDateTime }) => {
-  const { id, title, completed, date } = todo;
-  const handleDelete = () => {
-    onDeleteTodo(id);
+const AddTodoForm = ({ onAddTodo }) => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!selectedOption || selectedOption.value.trim() === '') return;
+
+    const newTodo = {
+      id: Date.now(),
+      title: selectedOption.value,
+      completed: false,
+      date: selectedDate ? selectedDate.format('MM-DD-YYYY hh:mm:ss A') : '',
+    };
+
+    onAddTodo(newTodo);
+    setSelectedOption(null);
+    setSelectedDate('');
   };
-  const handleDeleteDateTime = () => {
-    onDeleteDateTime(id);
+
+  const handleSelectChange = (selected) => {
+    if (selected) {
+      setSelectedOption(selected);
+    } else {
+      setSelectedOption(null);
+    }
+  };
+
+  const handleDateChange = (momentObj) => {
+    setSelectedDate(momentObj);
   };
 
   return (
-    <div className={`todo-item ${completed ? 'completed' : ''}`}>
-      <input type="checkbox" checked={completed} />
-      <span className="todo-title">{title}</span>
-      <button onClick={handleDelete}>Delete Todo</button>
-      {date && (
-        <div>
-          <span className="todo-date">{date}</span>
-          <button onClick={handleDeleteDateTime}>Delete Date/Time</button>
-        </div>
-      )}
-    </div>
+    <form className="add-todo-form" onSubmit={handleSubmit}>
+      <Select
+        isClearable
+        isSearchable
+        placeholder="Enter a new todo..."
+        value={selectedOption}
+        onChange={handleSelectChange}
+        options={[]}
+        styles={{
+          control: (provided) => ({
+            ...provided,
+            width: '300px',
+          }),
+        }}
+      />
+      <Datetime
+        inputProps={{ placeholder: 'Select date and time' }}
+        value={selectedDate}
+        dateFormat="MM-DD-YYYY"
+        timeFormat="hh:mm:ss A"
+        onChange={handleDateChange}
+      />
+      <button type="submit">Add</button>
+    </form>
   );
 };
 
-export default TodoItem;
+export default AddTodoForm;

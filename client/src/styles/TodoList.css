@@ -1,6 +1,6 @@
 .todo-list-container {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin-left: 1%;
     padding: 20px;
     background-color: #f2f2f2;
   }
@@ -10,4 +10,14 @@
     margin-bottom: 20px;
   }
   
-  
+  input.form-control {
+    width: auto;
+}
+
+.add-todo-form input[type="text"] {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-right: 10px;
+}
