@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import '../styles/AddTodoForm.css';
 import 'react-datetime/css/react-datetime.css';
@@ -66,6 +66,17 @@ const AddTodoForm = ({ onAddTodo }) => {
     const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
   };
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('todos');
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <div>
@@ -135,8 +146,7 @@ const AddTodoForm = ({ onAddTodo }) => {
         {todos.map((todo) => (
           <div key={todo.id} className="todo-item">
             <div>
-            <p className="todo-item-title">{todo.title}</p>
-            
+              <p className="todo-item-title">{todo.title}</p>
               <p>Date: {moment(todo.date).format('MMMM Do YYYY')}</p>
               <p>Time: {moment(todo.date).format('h:mm A')}</p>
             </div>
@@ -162,4 +172,3 @@ const AddTodoForm = ({ onAddTodo }) => {
 };
 
 export default AddTodoForm;
-
