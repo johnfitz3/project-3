@@ -1,67 +1,33 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
-import Datetime from 'react-datetime';
-import '../styles/AddTodoForm.css';
-import 'react-datetime/css/react-datetime.css';
+import React from 'react';
+import '../styles/TodoItem.css';
 
-const AddTodoForm = ({ onAddTodo }) => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('');
+const TodoItem = ({ todo, onDeleteTodo, onCompleteTodo }) => {
+  const { id, title, completed, date } = todo;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!selectedOption || selectedOption.value.trim() === '') return;
-
-    const newTodo = {
-      id: Date.now(),
-      title: selectedOption.value,
-      completed: false,
-      date: selectedDate ? selectedDate.format('MM-DD-YYYY hh:mm:ss A') : '',
-    };
-
-    onAddTodo(newTodo);
-    setSelectedOption(null);
-    setSelectedDate('');
+  const handleDelete = () => {
+    onDeleteTodo && onDeleteTodo(id);
   };
 
-  const handleSelectChange = (selected) => {
-    if (selected) {
-      setSelectedOption(selected);
-    } else {
-      setSelectedOption(null);
-    }
-  };
-
-  const handleDateChange = (momentObj) => {
-    setSelectedDate(momentObj);
+  const handleComplete = () => {
+    onCompleteTodo && onCompleteTodo(id);
   };
 
   return (
-    <form className="add-todo-form" onSubmit={handleSubmit}>
-      <Select
-        isClearable
-        isSearchable
-        placeholder="Enter a new todo..."
-        value={selectedOption}
-        onChange={handleSelectChange}
-        options={[]}
-        styles={{
-          control: (provided) => ({
-            ...provided,
-            width: '300px',
-          }),
-        }}
-      />
-      <Datetime
-        inputProps={{ placeholder: 'Select date and time' }}
-        value={selectedDate}
-        dateFormat="MM-DD-YYYY"
-        timeFormat="hh:mm:ss A"
-        onChange={handleDateChange}
-      />
-      <button type="submit">Add</button>
-    </form>
+    <div className={`todo-item ${completed ? 'completed' : ''}`}>
+      <div className="todo-item-content">
+        <div className="todo-item-title">{title}</div>
+        <div className="todo-item-date">{date}</div>
+      </div>
+      <div className="todo-item-actions">
+        <button className="btn-complete" onClick={handleComplete}>
+          {completed ? 'Undo' : 'Complete'}
+        </button>
+        <button className="btn-delete" onClick={handleDelete}>
+          Delete
+        </button>
+      </div>
+    </div>
   );
 };
 
-export default AddTodoForm;
+export default TodoItem;

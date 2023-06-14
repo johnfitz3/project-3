@@ -2,19 +2,17 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import '../styles/AddTodoForm.css';
 import 'react-datetime/css/react-datetime.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const AddTodoForm = () => {
+const AddTodoForm = ({ onAddTodo }) => {
   const [todoText, setTodoText] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [todos, setTodos] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [latestTodo, setLatestTodo] = useState(null);
-  const [showTodoList, setShowTodoList] = useState(false); // New state for showing the todo list
+  const [completedTodo, setCompletedTodo] = useState(null);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,7 +26,6 @@ const AddTodoForm = () => {
     };
 
     setTodos([...todos, newTodo]);
-    setLatestTodo(newTodo);
     setTodoText('');
     setSelectedDate('');
     setSelectedTime('');
@@ -46,8 +43,9 @@ const AddTodoForm = () => {
   };
 
   const handleTodoComplete = (id) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
+    const completedTodo = todos.find((todo) => todo.id === id);
+    setCompletedTodo(completedTodo);
+    setShowCompletionModal(true);
   };
 
   const handleShowModal = () => {
@@ -55,24 +53,18 @@ const AddTodoForm = () => {
   };
 
   const handleCloseModal = () => {
-    if (latestTodo) {
-      const confirmClose = window.confirm(
-        'Are you sure you want to close? Changes will not be saved.'
-      );
-
-      if (confirmClose) {
-        setLatestTodo(null);
-        setShowModal(false);
-      }
-    } else {
-      setLatestTodo(null);
-      setShowModal(false);
-    }
+    setShowModal(false);
   };
 
-  const handleSaveChanges = () => {
-    setShowModal(false);
-    setShowTodoList(true); // Show the todo list after saving changes
+  const handleCloseCompletionModal = () => {
+    setShowCompletionModal(false);
+    deleteTodoFromList(completedTodo.id);
+    setCompletedTodo(null);
+  };
+
+  const deleteTodoFromList = (id) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
   };
 
   return (
@@ -113,42 +105,61 @@ const AddTodoForm = () => {
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Latest Todo</Modal.Title>
+          <Modal.Title>New To-Do Added</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Title: {latestTodo?.title}</p>
-          <p>Date: {moment(latestTodo?.date).format('MMMM Do YYYY')}</p>
-          <p>Time: {moment(latestTodo?.date).format('h:mm A')}</p>
+          <p>A new to-do has been added to the list.</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSaveChanges}>
-            Save Changes
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showCompletionModal} onHide={handleCloseCompletionModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Congratulations!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Congratulations! You completed the To-Do: {completedTodo?.title}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseCompletionModal}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {showTodoList && (
-        <div className="todo-list">
-          {todos.map((todo) => (
-            <div key={todo.id} className="todo-item">
-              <div>
-                <p>{todo.title}</p>
-                <p>Date: {moment(todo.date).format('MMMM Do YYYY')}</p>
-                <p>Time: {moment(todo.date).format('h:mm A')}</p>
-              </div>
-              <FontAwesomeIcon
-                icon={faTrash}
-                onClick={() => handleTodoComplete(todo.id)}
-              />
+      <div className="todo-list">
+        {todos.map((todo) => (
+          <div key={todo.id} className="todo-item">
+            <div>
+            <p className="todo-item-title">{todo.title}</p>
+            
+              <p>Date: {moment(todo.date).format('MMMM Do YYYY')}</p>
+              <p>Time: {moment(todo.date).format('h:mm A')}</p>
             </div>
-          ))}
-        </div>
-      )}
+            {!todo.completed && (
+              <button
+                className="complete-button"
+                onClick={() => handleTodoComplete(todo.id)}
+              >
+                Complete
+              </button>
+            )}
+            <button
+              className="delete-button"
+              onClick={() => deleteTodoFromList(todo.id)}
+            >
+              Delete
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default AddTodoForm;
+

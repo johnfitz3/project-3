@@ -1,13 +1,15 @@
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schemas');
 const bodyParser = require("body-parser");
-var express = require('express')
-var app = express()
 const path = require('path')
 const mongoose = require('./config/connection')
+const PORT = process.env.PORT || 3001;
 const dotenv = require('dotenv').config({path:'./.env'})
 console.log(process.env)
-const PORT = process.env.PORT || 3001;
+
+var express = require('express')
+var app = express()
+
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.json());

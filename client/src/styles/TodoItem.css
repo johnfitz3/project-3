@@ -1,27 +1,55 @@
 .todo-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .todo-item.completed .todo-title {
-    text-decoration: line-through;
-  }
-  
-  .todo-title {
-    flex: 1;
-    margin-left: 10px;
-  }
-  
-  .todo-item input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  
-  .todo-item button {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc; /* Add a border */
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item.completed {
+  background-color: #f0f0f0; /* Customize the background color for completed items */
+}
+
+.todo-item-content {
+  flex-grow: 1;
+}
+
+.todo-item-title {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+
+.todo-item-date {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 5px;
+}
+
+.todo-item-actions {
+  margin-left: 10px;
+}
+
+.btn-complete,
+.btn-delete {
+  padding: 5px 10px;
+  border-radius: 3px;
+  border: none;
+  color: #ffffff; /* Customize the button text color */
+  background-color: #007bff; /* Customize the button background color */
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btn-complete {
+  background-color: #28a745; /* Customize the button background color for completed items */
+}
+
+.btn-delete {
+  background-color: #dc3545; /* Customize the button background color for delete action */
+}
