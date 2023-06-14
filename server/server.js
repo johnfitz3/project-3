@@ -1,23 +1,32 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schemas');
-const mongoose = require('mongoose');
+const bodyParser = require("body-parser");
+var express = require('express')
+var app = express()
+const path = require('path')
+const mongoose = require('./config/connection')
+const dotenv = require('dotenv').config({path:'./.env'})
+console.log(process.env)
 
 const PORT = process.env.PORT || 3001;
 
-const secretKey = 'd3a12d84b1d044c1560b8dd99be48e9b';
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Connect to MongoDB
-mongoose
-  .connect('mongodb://localhost:27017/todo-app', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
+if (process.env.NODE_ENV === 'production') {
+  // Exprees will serve up production assets
+  app.use(express.static('client/build'));
+
+  // Express serve up index.html file if it doesn't recognize route
+  const path = require('path');
+  console.log(__dirname, "dirname")
+  app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
   });
+}
 
 // Create the Apollo Server
 const server = new ApolloServer({
@@ -32,7 +41,18 @@ const server = new ApolloServer({
   },
 });
 
-// Start the server
-server.listen(PORT).then(({ url }) => {
-  console.log(`Server running at ${url}`);
-});
+// Create a new instance of an Apollo server with the GraphQL schema
+const startApolloServer = async () => {
+  await server.start();
+  server.applyMiddleware({ app });
+  
+  mongoose.once('open', () => {
+    app.listen(PORT, () => {
+      console.log(`API server running on port ${PORT}!`);
+      console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+    })
+  })
+  };
+  
+// Call the async function to start the server
+  startApolloServer();

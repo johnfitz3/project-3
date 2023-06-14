@@ -11,14 +11,14 @@ const App = () => {
     <Router>
       <div>
         <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="/">TodoList</Navbar.Brand>
+          <Navbar.Brand href="/">To-Do List</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar-nav" />
           <Navbar.Collapse id="navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
               <Nav.Link href="/signup">Sign Up</Nav.Link>
-              <Nav.Link href="/todolist">Todo List</Nav.Link>
+              <Nav.Link href="/todolist">To-Do List</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
