@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const todoSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -14,5 +13,5 @@ const todoSchema = new mongoose.Schema({
     default: false,
   },
 });
-
 module.exports = mongoose.model('Todo', todoSchema);
+

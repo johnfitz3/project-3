@@ -1,24 +1,17 @@
+.title-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title-container h3 {
+  margin: 0;
+}
+
 .add-todo-form {
-    display: flex;
-    margin-bottom: 20px;
-  }
-  
-  .add-todo-form input[type="text"] {
-    flex: 1;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    margin-right: 10px;
-  }
-  
-  .add-todo-form button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .todo-title {
-    text-align-last: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Rest of the CSS code */

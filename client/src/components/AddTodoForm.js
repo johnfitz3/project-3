@@ -1,68 +1,78 @@
 import React, { useState } from 'react';
-import Datetime from 'react-datetime';
 import moment from 'moment';
 import '../styles/AddTodoForm.css';
 import 'react-datetime/css/react-datetime.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import Form from 'react-bootstrap/Form';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const AddTodoForm = ({ onAddTodo }) => {
+const AddTodoForm = () => {
   const [todoText, setTodoText] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
   const [todos, setTodos] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [latestTodo, setLatestTodo] = useState(null);
+  const [showTodoList, setShowTodoList] = useState(false); // New state for showing the todo list
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (todoText.trim() === '') return;
+    if (todoText.trim() === '' || selectedTime === '') return;
 
     const newTodo = {
       id: Date.now(),
       title: todoText,
       completed: false,
-      date: selectedDate ? selectedDate.format('MM-DD-YYYY hh:mm:ss A') : '',
+      date: selectedDate + ' ' + selectedTime,
     };
 
     setTodos([...todos, newTodo]);
+    setLatestTodo(newTodo);
     setTodoText('');
     setSelectedDate('');
+    setSelectedTime('');
+    handleShowModal();
   };
 
-  const handleTextChange = (e) => {
-    setTodoText(e.target.value);
-  };
-
-  const handleDateChange = (momentObj) => {
-    setSelectedDate(momentObj);
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
   };
 
   const handleTimeChange = (e) => {
     const timeValue = e.target.value;
-    const formattedTime = moment(selectedDate).format('MM-DD-YYYY') + ' ' + timeValue;
-    const newDate = moment(formattedTime, 'MM-DD-YYYY hh:mm A', true);
-    if (newDate.isValid()) {
-      setSelectedDate(newDate);
-    }
+    const formattedTime = moment(timeValue, 'HH:mm').format('HH:mm');
+    setSelectedTime(formattedTime);
   };
 
   const handleTodoComplete = (id) => {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, completed: !todo.completed };
-      }
-      return todo;
-    });
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
-    if (id === 'check-api-checkbox-done') {
-      setShowModal(true);
-    }
+  };
+
+  const handleShowModal = () => {
+    setShowModal(true);
   };
 
   const handleCloseModal = () => {
+    if (latestTodo) {
+      const confirmClose = window.confirm(
+        'Are you sure you want to close? Changes will not be saved.'
+      );
+
+      if (confirmClose) {
+        setLatestTodo(null);
+        setShowModal(false);
+      }
+    } else {
+      setLatestTodo(null);
+      setShowModal(false);
+    }
+  };
+
+  const handleSaveChanges = () => {
     setShowModal(false);
+    setShowTodoList(true); // Show the todo list after saving changes
   };
 
   return (
@@ -74,89 +84,69 @@ const AddTodoForm = ({ onAddTodo }) => {
               type="text"
               placeholder="Enter a new todo..."
               value={todoText}
-              onChange={handleTextChange}
+              onChange={(e) => setTodoText(e.target.value)}
             />
           </div>
           <div className="todo-content">
             <div className="date-picker">
-              <Datetime
-                inputProps={{ placeholder: 'Select date' }}
+              <input
+                type="date"
+                placeholder="Select date"
                 value={selectedDate}
-                dateFormat="MM-DD-YYYY"
-                timeFormat={false}
                 onChange={handleDateChange}
               />
             </div>
             <div className="time-input">
               <input
-                type="text"
-                placeholder="Enter time (hh:mm AM/PM) or choose from the calendar"
-                value={selectedDate ? moment(selectedDate).format('hh:mm A') : ''}
+                type="time"
+                placeholder="Select time"
+                value={selectedTime}
                 onChange={handleTimeChange}
               />
             </div>
-          </div>
-          <div className="todo-footer">
-            <button type="submit">Add</button>
+            <div className="add-button">
+              <button type="submit">Add</button>
+            </div>
           </div>
         </div>
       </form>
 
-      <div className="todo-list">
-        {todos.map((todo) => (
-          <div key={todo.id} className="todo-item">
-            <div className="todo-title">{todo.title}</div>
-            <div className="todo-actions">
-              <FontAwesomeIcon
-                icon={todo.completed ? faCheck : null}
-                className={`todo-action ${todo.completed ? 'completed' : 'incomplete'}`}
-                onClick={() => handleTodoComplete(todo.id)}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <Form>
-        <div className="mb-3 d-flex flex-column align-items-center">
-          <div className="d-flex">
-            <div className="me-3">
-              <Form.Check type="checkbox" id="check-api-checkbox-done">
-                <Form.Check.Input
-                  type="checkbox"
-                  isValid
-                  onClick={() => handleTodoComplete('check-api-checkbox-done')}
-                />
-                <Form.Check.Label>I did it</Form.Check.Label>
-                <Form.Control.Feedback type="valid">Success!</Form.Control.Feedback>
-              </Form.Check>
-            </div>
-            <div>
-              <Form.Check type="checkbox" id="check-api-checkbox-not-done">
-                <Form.Check.Input
-                  type="checkbox"
-                  isValid
-                  onClick={() => handleTodoComplete('check-api-checkbox-not-done')}
-                />
-                <Form.Check.Label>I could not do it</Form.Check.Label>
-                <Form.Control.Feedback type="valid">Nope!</Form.Control.Feedback>
-              </Form.Check>
-            </div>
-          </div>
-        </div>
-      </Form>
-
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Congratulations <img src="https://icons8.com/icon/33824/confetti" alt="confetti" /></Modal.Title>
+          <Modal.Title>Latest Todo</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you completed the task!</Modal.Body>
+        <Modal.Body>
+          <p>Title: {latestTodo?.title}</p>
+          <p>Date: {moment(latestTodo?.date).format('MMMM Do YYYY')}</p>
+          <p>Time: {moment(latestTodo?.date).format('h:mm A')}</p>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
           </Button>
+          <Button variant="primary" onClick={handleSaveChanges}>
+            Save Changes
+          </Button>
         </Modal.Footer>
       </Modal>
+
+      {showTodoList && (
+        <div className="todo-list">
+          {todos.map((todo) => (
+            <div key={todo.id} className="todo-item">
+              <div>
+                <p>{todo.title}</p>
+                <p>Date: {moment(todo.date).format('MMMM Do YYYY')}</p>
+                <p>Time: {moment(todo.date).format('h:mm A')}</p>
+              </div>
+              <FontAwesomeIcon
+                icon={faTrash}
+                onClick={() => handleTodoComplete(todo.id)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
