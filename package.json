@@ -1,27 +1,8 @@
 {
-  "name": "project-3",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "apollo-server": "^3.12.0",
-    "axios": "^1.4.0",
-    "bootstrap": "^5.3.0",
-    "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-autosuggest": "^10.1.0",
-    "react-bootstrap": "^2.7.4",
-    "react-datepicker": "^4.12.0",
-    "react-datetime": "^3.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^5.3.4",
-    "react-scripts": "5.0.1",
-    "react-select": "^5.7.3",
-    "react-time-picker": "^6.2.0",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "tech-matchup-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
@@ -33,5 +14,13 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.3.0"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "apollo-server": "^3.12.0",
+    "apollo-server-express": "^3.12.0",
+    "axios": "^1.4.0",
+    "jwt-decode": "^3.1.2"
   }
 }

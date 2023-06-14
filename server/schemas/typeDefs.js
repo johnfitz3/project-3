@@ -4,7 +4,11 @@ const typeDefs = gql`
   type User {
     id: ID!
     username: String!
-    password: String!
+  }
+
+  type Auth {
+    token: ID!
+    user: User
   }
 
   type Todo {
@@ -18,9 +22,19 @@ const typeDefs = gql`
     todos: [Todo!]!
   }
 
+  input RegisterUserInput {
+    username: String!
+    password: String!
+  }
+
+  input LoginUserInput {
+    username: String!
+    password: String!
+  }
+
   type Mutation {
-    registerUser(username: String!, password: String!): User!
-    loginUser(username: String!, password: String!): User!
+    registerUser(email: String!, password: String!): Auth!
+    loginUser(email: String!, password: String!): Auth!
     createTodo(title: String!, description: String!): Todo!
   }
 `;

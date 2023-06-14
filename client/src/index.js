@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
+import client from './utils/apolloClient';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/navbar.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
+  <ApolloProvider client={client}>
+    <React.StrictMode>
       <App />
-    </BrowserRouter>
-  </React.StrictMode>,
+    </React.StrictMode>
+  </ApolloProvider>,
   document.getElementById('root')
 );

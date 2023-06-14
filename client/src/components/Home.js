@@ -11,7 +11,7 @@ const Home = () => {
       // Simulate loading for 2 seconds
       const timeout = setTimeout(() => {
         history.push('/todolist');
-      }, 500);
+      }, 300);
       return () => clearTimeout(timeout);
     }
   }, [isLoading, history]);
@@ -23,9 +23,9 @@ const Home = () => {
     <Container className="text-center">
       <Row>
         <Col>
-          <h1>Welcome to Your Todo App</h1>
+          <h1>Welcome to Your To-Do App</h1>
           <p className="lead">
-            This is a simple todo application built with React. Stay organized and manage your tasks efficiently.
+            This is a simple to-do application built with React. Stay organized and manage your tasks efficiently.
           </p>
           {isLoading ? (
             <p>Loading...</p>

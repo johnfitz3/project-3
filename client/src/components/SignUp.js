@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { REGISTER_USER } from '../utils/mutation';
 import '../styles/Login.css';
 
 const SignUp = () => {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = (event) => {
+  const history = useHistory();
+
+  const [registerUser, { loading, error }] = useMutation(REGISTER_USER, {
+    onCompleted: () => {
+      setEmail('');
+      setPassword('');
+      history.push('/login');
+    },
+  });
+  
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    // Perform sign-up logic here
-    // You can make an API call to your server or handle the sign-up process locally
-    // Reset the form fields after sign-up
-    setName('');
-    setEmail('');
-    setPassword('');
-    // Optionally, you can navigate to the login page here
-    // You can replace "/login" with the actual login route in your application
-    // Make sure it matches the "path" attribute defined in AppRouter.js
-    window.location.href = '/login';
-  };
+    try{
+     await registerUser({ variables: { email, password } });
+  }catch (e){
+    console.log(e)
+  }};
 
   return (
     <div className="join-container">
       <div className="join-box">
         <h2 className='join-heading'>Sign Up</h2>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
           <input
             type="email"
             placeholder="Email"
@@ -43,7 +42,10 @@ const SignUp = () => {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Signing Up...' : 'Sign Up'}
+          </button>
+          {error && <p>Error occurred while signing up</p>}
         </form>
         <p>
           Already have an account? <Link to="/login">Log in</Link>
