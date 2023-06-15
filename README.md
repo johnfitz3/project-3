@@ -10,24 +10,20 @@
   - [Installation](#installation)
   - [Usage](#usage)
   - [License](#license)
-  - [Contribution](#contribution)
-  - [Testing](#testing)
   - [Additional Info](#additional-info)
 
   ## Installation:
   Clone repository to local computer, run `npm install` in integrated terminal, then run `npm run develop` in integrated terminal.
   ## Usage:
-  [Video](Usages found here.)
+  - App deployed to Heroku [here](https://to-do-application-650651e56723.herokuapp.com/)
+  
+  ![Alt text](./assets/image.png)
+  ![Alt text](./assets/image-1.png)
+  ![Alt text](./assets/image-2.png)
 
   ## License
     This application is covered by the MIT license.
 
-  ## Contribution:
-  How to contribute to this project here.
-  
-  ## Testing:
-  How to test app here.
-
   ## Additional Info:
   - Github: [Brusomaroff](https://github.com/Brusomaroff), [eregaldo92](https://github.com/eregaldo92), [johnfitz3](https://github.com/johnfitz3), and [prestontravis](https://github.com/prestontravis)
-   - App deployed to Heroku [here](www.heroku.com/project3)
+   
