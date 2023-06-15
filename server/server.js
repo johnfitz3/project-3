@@ -1,4 +1,4 @@
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config();  
 const { ApolloServer } = require("apollo-server-express");
 const { typeDefs, resolvers } = require("./schemas");
 const path = require("path");
@@ -15,11 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "production") {
   // Express will serve up production assets
   app.use(express.static(path.join(__dirname, "../client/build")));
-  // Express serve up index.html file if it doesn't recognize route
-  // console.log(__dirname, "dirname")
-  // app.get('/*', function (req, res) {
-  //   res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
-  // });
+  
 }
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
