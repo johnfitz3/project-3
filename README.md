@@ -17,9 +17,9 @@
   ## Usage:
   - App deployed to Heroku [here](https://to-do-application-650651e56723.herokuapp.com/)
   
-  ![Alt text](image.png)
-  ![Alt text](image-1.png)
-  ![Alt text](image-2.png)
+  ![Alt text](./assets/image.png)
+  ![Alt text](./assets/image-1.png)
+  ![Alt text](./assets/image-2.png)
 
   ## License
     This application is covered by the MIT license.
