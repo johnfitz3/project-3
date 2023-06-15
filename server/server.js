@@ -1,4 +1,4 @@
-const dotenv = require("dotenv").config();  
+require("dotenv").config();
 const { ApolloServer } = require("apollo-server-express");
 const { typeDefs, resolvers } = require("./schemas");
 const path = require("path");

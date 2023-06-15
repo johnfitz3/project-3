@@ -1,7 +1,9 @@
+require("dotenv").config();
 const mongoose = require('mongoose');
+const mongoConnection = process.env.REACT_APP_MONGOOSE_STRING ||'mongodb://localhost:27017/todo-app'
 
 mongoose
-  .connect('mongodb://localhost:27017/todo-app', {
+  .connect(mongoConnection, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
