@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutation';
-import { setAuthToken } from '../utils/auth';
 import '../styles/Login.css';
 
 const Login = () => {
@@ -11,14 +10,14 @@ const Login = () => {
   const [error, setError] = useState('');
   const history = useHistory();
 
-  const [loginUser, { loading }] = useMutation(LOGIN_USER, {
+  const [loginUser] = useMutation(LOGIN_USER, {
     onCompleted: (data) => {
-      const token = data.login.token;
-      setAuthToken(token);
+      const token = data.loginUser.token;
+      localStorage.setItem('id_token', token);
       setEmail('');
       setPassword('');
       setError('');
-      history.push('/home');
+      history.push('/todolist');
     },
     onError: (error) => {
       setError('Invalid email or password');
@@ -27,7 +26,11 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    loginUser({ variables: { email, password } });
+    loginUser({ 
+      variables: { 
+        input: { email, password }
+      } 
+    });
   };
 
   return (

@@ -1,48 +1,51 @@
 import { gql } from '@apollo/client';
 
 export const LOGIN_USER = gql`
-  mutation loginUser($email: String!, $password: String!) {
-    loginUser(email: $email, password: $password) {
+  mutation loginUser($input: LoginUserInput!) {
+    loginUser(input: $input) {
       token
       user {
         id
-        username
+        email
       }
     }
   }
 `;
 
 export const REGISTER_USER = gql`
-  mutation addUser($email: String!, $password: String!) {
-    registerUser(email: $email, password: $password) {
+  mutation registerUser($input: RegisterUserInput!) {
+    registerUser(input: $input) {
       token
       user {
         id
-        username
+        email
       }
     }
   }
 `;
 
-export const DELETE_USER = gql`
-  mutation deleteUser($id: ID!) {
-    deleteUser(id: $id) {
+export const CREATE_TODO = gql`
+  mutation createTodo($title: String!, $description: String!) {
+    createTodo(title: $title, description: $description) {
       id
-      username
+      title
+      description
+      completed
     }
   }
 `;
 
-export const CREATE_POST = gql`
-  mutation createPost($title: String!, $content: String!) {
-    createPost(title: $title, content: $content) {
-      _id
-      title
-      content
-      author {
-        _id
-        username
-      }
+export const UPDATE_TODO = gql`
+  mutation updateTodo($id: ID!, $completed: Boolean!) {
+    updateTodo(id: $id, completed: $completed) {
+      id
+      completed
     }
+  }
+`;
+
+export const DELETE_TODO = gql`
+  mutation deleteTodo($id: ID!) {
+    deleteTodo(id: $id)
   }
 `;
