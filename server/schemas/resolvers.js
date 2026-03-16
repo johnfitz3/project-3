@@ -1,10 +1,15 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const { generateToken } = require('../utils/auth');
+const { generateToken, verifyToken } = require('../utils/auth');
+const Todo = require('../models/Todo');
 
 const resolvers = {
   Query: {
-    // Add your query resolvers here...
+    todos: async (_, __, { token }) => {
+      const decoded = verifyToken(token);
+      if (!decoded) throw new Error('Not authenticated');
+      return await Todo.find({ user: decoded.userId });
+    },
   },
   Mutation: {
     registerUser: async (_, { input }) => {
@@ -64,7 +69,37 @@ const resolvers = {
         throw new Error('Invalid email or password');
       }
     },
-    // Add your other mutation resolvers here...
+    createTodo: async (_, { title, description }, { token }) => {
+      const decoded = verifyToken(token);
+      if (!decoded) throw new Error('Not authenticated');
+      
+      const todo = new Todo({
+        title,
+        description,
+        user: decoded.userId,
+        completed: false,
+      });
+      await todo.save();
+      return todo;
+    },
+    updateTodo: async (_, { id, completed }, { token }) => {
+      const decoded = verifyToken(token);
+      if (!decoded) throw new Error('Not authenticated');
+      
+      const todo = await Todo.findOneAndUpdate(
+        { _id: id, user: decoded.userId },
+        { completed },
+        { new: true }
+      );
+      return todo;
+    },
+    deleteTodo: async (_, { id }, { token }) => {
+      const decoded = verifyToken(token);
+      if (!decoded) throw new Error('Not authenticated');
+      
+      await Todo.findOneAndDelete({ _id: id, user: decoded.userId });
+      return true;
+    },
   },
 };
 

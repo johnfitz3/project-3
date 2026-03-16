@@ -1,37 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_TODOS } from '../utils/queries';
+import { CREATE_TODO, UPDATE_TODO, DELETE_TODO } from '../utils/mutation';
 import TodoItem from './TodoItem';
 import AddTodoForm from './AddTodoForm';
 import '../styles/TodoList.css';
 
 const TodoList = () => {
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    const storedTodos = localStorage.getItem('todos');
-    if (storedTodos) {
-      setTodos(JSON.parse(storedTodos));
-    }
-  }, []); // Run only once on component mount
+  const { loading, error, data, refetch } = useQuery(GET_TODOS);
+  const [createTodo] = useMutation(CREATE_TODO, {
+    onCompleted: () => refetch(),
+  });
+  const [updateTodo] = useMutation(UPDATE_TODO);
+  const [deleteTodo] = useMutation(DELETE_TODO, {
+    onCompleted: () => refetch(),
+  });
 
   const handleAddTodo = (todo) => {
-    const updatedTodos = [...todos, todo];
-    setTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+    createTodo({
+      variables: {
+        title: todo.title,
+        description: todo.description,
+      },
+    });
   };
 
   const handleDeleteTodo = (id) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+    deleteTodo({ variables: { id } });
   };
 
-  const handleCompleteTodo = (id) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
-    setTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+  const handleCompleteTodo = (id, currentStatus) => {
+    updateTodo({
+      variables: { id, completed: !currentStatus },
+      optimisticResponse: {
+        updateTodo: {
+          __typename: 'Todo',
+          id,
+          completed: !currentStatus,
+        },
+      },
+    });
   };
+
+  if (loading) return <p>Loading todos...</p>;
+  if (error) return <p>Error loading todos: {error.message}</p>;
+
+  const todos = data?.todos || [];
 
   return (
     <div className="todo-list-container">
@@ -46,7 +60,7 @@ const TodoList = () => {
               key={todo.id}
               todo={todo}
               onDeleteTodo={handleDeleteTodo}
-              onCompleteTodo={handleCompleteTodo}
+              onCompleteTodo={() => handleCompleteTodo(todo.id, todo.completed)}
             />
           ))}
         </div>
@@ -56,4 +70,3 @@ const TodoList = () => {
 };
 
 export default TodoList;
-

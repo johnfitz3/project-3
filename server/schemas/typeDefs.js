@@ -34,6 +34,8 @@ const typeDefs = gql`
 
   type Mutation {
     registerUser(input: RegisterUserInput!): Auth!
+    updateTodo(id: ID!, completed: Boolean!): Todo!
+    deleteTodo(id: ID!): Boolean!
     loginUser(input: LoginUserInput!): Auth!
     createTodo(title: String!, description: String!): Todo!
   }

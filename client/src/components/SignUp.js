@@ -20,7 +20,7 @@ const SignUp = () => {
   const handleSubmit = async(event) => {
     event.preventDefault();
     try{
-     await registerUser({ variables: { email, password } });
+     await registerUser({ variables: { input: { email, password } } });
   }catch (e){
     console.log(e)
   }};
